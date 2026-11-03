@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <h2>📦 Inventory Stock Tracker</h2>
+        <nav>
+            <a href="/">Dashboard</a>
+            <a href="/add">Add Product</a>
+            <a href="/inventory">View Inventory</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Add New Product</h1>
+        <p>Enter the product details below.</p>
+
+        <div class="form-container">
+            <form method="POST" action="/add">
+
+                <label>Product Name</label>
+                <input type="text" name="name" placeholder="e.g. Laptop" required>
+
+                <label>Aisle Number</label>
+                <input type="text" name="aisle" placeholder="e.g. A1" required>
+
+                <label>Bin Number</label>
+                <input type="text" name="bin" placeholder="e.g. B1" required>
+
+                <label>Quantity</label>
+                <input type="number" name="quantity" min="0" required>
+
+                <label>Minimum Stock Level</label>
+                <input type="number" name="minimum" min="0" required>
+
+                <button type="submit">Add Product</button>
+
+            </form>
+        </div>
+    </main>
+
+</body>
+
+</html>

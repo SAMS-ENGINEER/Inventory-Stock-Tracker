@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Inventory</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <h2>📦 Inventory Stock Tracker</h2>
+        <nav>
+            <a href="{{ url_for('home') }}">Dashboard</a>
+            <a href="{{ url_for('add_product') }}">Add Product</a>
+            <a href="{{ url_for('inventory') }}">View Inventory</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Product Inventory</h1>
+        <p>Search products and update stock quantities.</p>
+
+        <section class="inventory-section">
+
+            <form method="GET" action="/inventory" class="search-form">
+                <input type="text" name="search" placeholder="Search by product name or ID" value="{{ search }}">
+                <button type="submit">Search</button>
+                <a href="/inventory" class="reset-btn">Reset</a>
+            </form>
+
+            <h2>All Products</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Product</th>
+                        <th>Aisle</th>
+                        <th>Bin</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Update Stock</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for aisle, bins in warehouse.items() %}
+                    {% for bin_number, items in bins.items() %}
+                    {% for product in items %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.name }}</td>
+                        <td>{{ aisle }}</td>
+                        <td>{{ bin_number }}</td>
+                        <td>{{ product.quantity }}</td>
+
+                        <td>
+                            {% if product.quantity <= product.minimum %} <span class="status low-stock">
+                                Low Stock
+                                </span>
+                                {% else %}
+                                <span class="status in-stock">
+                                    In Stock
+                                </span>
+                                {% endif %}
+                        </td>
+
+                        <td>
+                            <form method="POST" action="{{ url_for('update_stock', product_id=product.id) }}"
+                                class="update-form">
+
+                                <input type="number" name="change" placeholder="+5 or -2" required>
+
+                                <button type="submit">Update</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                    {% endfor %}
+
+                    {% if not products %}
+                    <tr>
+                        <td colspan="7" style="text-align:center;">
+                            No products found.
+                        </td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+
+        </section>
+    </main>
+
+</body>
+
+</html>

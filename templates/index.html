@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Stock Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <header>
+        <h2>📦 Inventory Stock Tracker</h2>
+        <nav>
+            <a href="{{ url_for('home') }}">Dashboard</a>
+            <a href="{{ url_for('add_product') }}">Add Product</a>
+            <a href="{{ url_for('inventory') }}">View Inventory</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Inventory Dashboard</h1>
+        <p>Manage and track your warehouse stock easily.</p>
+
+        <div class="cards">
+
+            <div class="card">
+                <h3>Total Products</h3>
+                <h2>{{ total_products }}</h2>
+            </div>
+
+            <div class="card">
+                <h3>Total Stock</h3>
+                <h2>{{ total_stock }}</h2>
+            </div>
+
+            <div class="card warning">
+                <h3>Low Stock Items</h3>
+                <h2>{{ low_stock }}</h2>
+            </div>
+
+        </div>
+
+        <section class="inventory-section">
+            <h2>Inventory Overview</h2>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Aisle</th>
+                        <th>Bin</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for product in products %}
+
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.aisle }}</td>
+                        <td>{{ product.bin }}</td>
+                        <td>{{ product.quantity }}</td>
+
+                        <td>
+                            {% if product.quantity <= product.minimum %} <span class="status low-stock">
+                                Low Stock
+                                </span>
+                                {% else %}
+                                <span class="status in-stock">
+                                    In Stock
+                                </span>
+                                {% endif %}
+                        </td>
+                    </tr>
+
+                    {% else %}
+
+                    <tr>
+                        <td colspan="5" style="text-align: center;">
+                            No products available.
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+            </table>
+
+        </section>
+
+    </main>
+
+</body>
+
+</html>
