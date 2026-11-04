@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Low Stock | Inventory Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="app-layout">
+        {% include 'sidebar.html' %}
+
+        <main class="main-content">
+            <div class="page-heading">
+                <h1>Low Stock Alerts</h1>
+                <p>Products that need restocking</p>
+            </div>
+
+            <section class="panel recent-panel page-panel">
+                <div class="panel-heading">
+                    <h3>
+                        <i class="fa-solid fa-triangle-exclamation alert-heading-icon"></i>
+                        Low Stock Products
+                    </h3>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>PRODUCT ID</th>
+                                <th>ITEM NAME</th>
+                                <th>AISLE</th>
+                                <th>BIN</th>
+                                <th>QUANTITY</th>
+                                <th>MINIMUM</th>
+                                <th>STATUS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td>#{{ product.id }}</td>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.aisle }}</td>
+                                <td>{{ product.bin }}</td>
+                                <td>{{ product.quantity }}</td>
+                                <td>{{ product.minimum }}</td>
+                                <td>
+                                    <span class="status-pill status-low">
+                                        Low Stock
+                                    </span>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="7" class="empty-table">
+                                    No low-stock products found.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+
+</html>

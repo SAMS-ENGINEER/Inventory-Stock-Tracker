@@ -4,48 +4,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Product</title>
+
+    <title>Add Item | Inventory Stock Tracker</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-    <header>
-        <h2>📦 Inventory Stock Tracker</h2>
-        <nav>
-            <a href="/">Dashboard</a>
-            <a href="/add">Add Product</a>
-            <a href="/inventory">View Inventory</a>
-        </nav>
-    </header>
+    <div class="app-layout">
 
-    <main>
-        <h1>Add New Product</h1>
-        <p>Enter the product details below.</p>
+        <!-- SAME SIDEBAR -->
+        {% include 'sidebar.html' %}
 
-        <div class="form-container">
-            <form method="POST" action="/add">
+        <main class="main-content">
 
-                <label>Product Name</label>
-                <input type="text" name="name" placeholder="e.g. Laptop" required>
+            <div class="topbar">
+                <div class="page-heading">
+                    <h1>Add Item</h1>
+                    <p>Add new products to your warehouse inventory</p>
+                </div>
 
-                <label>Aisle Number</label>
-                <input type="text" name="aisle" placeholder="e.g. A1" required>
+                <div class="topbar-right">
+                    <div class="profile">
+                        <span class="avatar">A</span>
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </div>
 
-                <label>Bin Number</label>
-                <input type="text" name="bin" placeholder="e.g. B1" required>
+            <section class="panel add-product-panel">
 
-                <label>Quantity</label>
-                <input type="number" name="quantity" min="0" required>
+                <div class="panel-heading">
+                    <div>
+                        <h3>
+                            <i class="fa-solid fa-circle-plus heading-bolt"></i>
+                            Add New Product
+                        </h3>
+                        <p>Enter the product details below</p>
+                    </div>
+                </div>
 
-                <label>Minimum Stock Level</label>
-                <input type="number" name="minimum" min="0" required>
+                <form method="POST" action="{{ url_for('add_product') }}" class="add-product-form">
 
-                <button type="submit">Add Product</button>
+                    <div class="form-group">
+                        <label for="name">Product Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter product name" required>
+                    </div>
 
-            </form>
-        </div>
-    </main>
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label for="aisle">Aisle</label>
+                            <input type="text" id="aisle" name="aisle" placeholder="e.g. A1" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="bin">Bin</label>
+                            <input type="text" id="bin" name="bin" placeholder="e.g. B2" required>
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+                            <label for="quantity">Quantity</label>
+                            <input type="number" id="quantity" name="quantity" placeholder="Enter quantity" min="0"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="minimum">Minimum Stock</label>
+                            <input type="number" id="minimum" name="minimum" placeholder="Minimum quantity" min="0"
+                                required>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button type="submit" class="submit-btn">
+                            <i class="fa-solid fa-plus"></i>
+                            Add Product
+                        </button>
+
+                        <a href="{{ url_for('inventory') }}" class="cancel-btn">
+                            Cancel
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </section>
+
+        </main>
+
+    </div>
 
 </body>
 

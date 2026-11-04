@@ -4,96 +4,154 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>View Inventory</title>
+
+    <title>Inventory | Inventory Stock Tracker</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-    <header>
-        <h2>📦 Inventory Stock Tracker</h2>
-        <nav>
-            <a href="{{ url_for('home') }}">Dashboard</a>
-            <a href="{{ url_for('add_product') }}">Add Product</a>
-            <a href="{{ url_for('inventory') }}">View Inventory</a>
-        </nav>
-    </header>
+    <div class="app-layout">
 
-    <main>
-        <h1>Product Inventory</h1>
-        <p>Search products and update stock quantities.</p>
+        <!-- SAME SIDEBAR AS DASHBOARD -->
+        {% include 'sidebar.html' %}
 
-        <section class="inventory-section">
+        <main class="main-content">
 
-            <form method="GET" action="/inventory" class="search-form">
-                <input type="text" name="search" placeholder="Search by product name or ID" value="{{ search }}">
-                <button type="submit">Search</button>
-                <a href="/inventory" class="reset-btn">Reset</a>
-            </form>
+            <div class="topbar">
+                <div class="page-heading">
+                    <h1>Inventory</h1>
+                    <p>Manage and search your warehouse products</p>
+                </div>
 
-            <h2>All Products</h2>
+                <div class="topbar-right">
+                    <div class="profile">
+                        <span class="avatar">A</span>
+                        <span>Admin</span>
+                    </div>
+                </div>
+            </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Product</th>
-                        <th>Aisle</th>
-                        <th>Bin</th>
-                        <th>Quantity</th>
-                        <th>Status</th>
-                        <th>Update Stock</th>
-                    </tr>
-                </thead>
+            <section class="panel recent-panel page-panel">
 
-                <tbody>
-                    {% for aisle, bins in warehouse.items() %}
-                    {% for bin_number, items in bins.items() %}
-                    {% for product in items %}
-                    <tr>
-                        <td>{{ product.id }}</td>
-                        <td>{{ product.name }}</td>
-                        <td>{{ aisle }}</td>
-                        <td>{{ bin_number }}</td>
-                        <td>{{ product.quantity }}</td>
+                <div class="panel-heading recent-heading">
+                    <div>
+                        <h3>
+                            <i class="fa-solid fa-boxes-stacked recent-icon"></i>
+                            All Products
+                        </h3>
+                        <p>View and manage your inventory</p>
+                    </div>
 
-                        <td>
-                            {% if product.quantity <= product.minimum %} <span class="status low-stock">
-                                Low Stock
-                                </span>
-                                {% else %}
-                                <span class="status in-stock">
-                                    In Stock
-                                </span>
-                                {% endif %}
-                        </td>
+                    <a href="{{ url_for('add_product') }}" class="view-all-btn">
+                        <i class="fa-solid fa-plus"></i>
+                        Add Item
+                    </a>
+                </div>
 
-                        <td>
-                            <form method="POST" action="{{ url_for('update_stock', product_id=product.id) }}"
-                                class="update-form">
+                <!-- SEARCH -->
+                <form method="GET" action="{{ url_for('inventory') }}" class="inventory-search-form">
 
-                                <input type="number" name="change" placeholder="+5 or -2" required>
+                    <input type="text" name="search" placeholder="Search by product name or ID..." value="{{ search }}">
 
-                                <button type="submit">Update</button>
-                            </form>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                    {% endfor %}
-                    {% endfor %}
+                    <button type="submit">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                        Search
+                    </button>
 
-                    {% if not products %}
-                    <tr>
-                        <td colspan="7" style="text-align:center;">
-                            No products found.
-                        </td>
-                    </tr>
-                    {% endif %}
-                </tbody>
-            </table>
+                    <a href="{{ url_for('inventory') }}" class="inventory-reset-btn">
+                        Reset
+                    </a>
+                </form>
 
-        </section>
-    </main>
+                <!-- PRODUCT TABLE -->
+                <div class="table-wrapper">
+
+                    <table class="inventory-table">
+
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>ITEM NAME</th>
+                                <th>AISLE</th>
+                                <th>BIN</th>
+                                <th>QUANTITY</th>
+                                <th>MINIMUM</th>
+                                <th>STATUS</th>
+                                <th>UPDATE STOCK</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            {% for aisle, bins in warehouse.items() %}
+                            {% for bin_number, items in bins.items() %}
+                            {% for product in items %}
+
+                            <tr>
+                                <td>#{{ product.id }}</td>
+
+                                <td class="item-name">
+                                    <i class="fa-solid fa-box"></i>
+                                    {{ product.name }}
+                                </td>
+
+                                <td>{{ aisle }}</td>
+                                <td>{{ bin_number }}</td>
+                                <td>{{ product.quantity }}</td>
+                                <td>{{ product.minimum }}</td>
+
+                                <td>
+                                    {% if product.quantity <= product.minimum %} <span class="status-pill status-low">
+                                        Low Stock
+                                        </span>
+                                        {% else %}
+                                        <span class="status-pill status-good">
+                                            In Stock
+                                        </span>
+                                        {% endif %}
+                                </td>
+
+                                <td>
+                                    <form method="POST" action="{{ url_for('update_stock', product_id=product.id) }}"
+                                        class="stock-update-form">
+
+                                        <input type="number" name="change" placeholder="+5 or -2" required>
+
+                                        <button type="submit">
+                                            Update
+                                        </button>
+                                    </form>
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+                            {% endfor %}
+                            {% endfor %}
+
+                            {% if not products %}
+                            <tr>
+                                <td colspan="8" class="empty-table">
+                                    No products found.
+                                </td>
+                            </tr>
+                            {% endif %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
 
 </body>
 

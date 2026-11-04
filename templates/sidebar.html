@@ -1,0 +1,50 @@
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-logo">
+            <i class="fa-solid fa-cube"></i>
+        </div>
+        <div class="brand-text">
+            Inventory<br>Stock Tracker
+        </div>
+    </div>
+
+    <nav class="side-nav">
+        <a href="{{ url_for('home') }}" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}">
+            <i class="fa-solid fa-house"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a href="{{ url_for('inventory') }}" class="nav-link {% if active_page == 'inventory' %}active{% endif %}">
+            <i class="fa-solid fa-box"></i>
+            <span>Inventory</span>
+        </a>
+
+        <a href="{{ url_for('add_product') }}" class="nav-link {% if active_page == 'add' %}active{% endif %}">
+            <i class="fa-solid fa-square-plus"></i>
+            <span>Add Item</span>
+        </a>
+
+        <a href="{{ url_for('update_stock_page') }}" class="nav-link {% if active_page == 'update' %}active{% endif %}">
+            <i class="fa-solid fa-arrows-rotate"></i>
+            <span>Update Stock</span>
+        </a>
+
+        <a href="{{ url_for('low_stock_page') }}" class="nav-link {% if active_page == 'low_stock' %}active{% endif %}">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <span>Low Stock</span>
+        </a>
+    </nav>
+
+    <div class="sidebar-bottom">
+        <div class="warehouse-icon">
+            <i class="fa-solid fa-warehouse"></i>
+        </div>
+        <div>
+            <strong>Main Warehouse</strong>
+            <small>
+                <i class="fa-solid fa-location-dot"></i>
+                Kolkata, India
+            </small>
+        </div>
+    </div>
+</aside>

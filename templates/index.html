@@ -4,96 +4,421 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inventory Stock Tracker</title>
+
+    <title>Dashboard | Inventory Stock Tracker</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-    <header>
-        <h2>📦 Inventory Stock Tracker</h2>
-        <nav>
-            <a href="{{ url_for('home') }}">Dashboard</a>
-            <a href="{{ url_for('add_product') }}">Add Product</a>
-            <a href="{{ url_for('inventory') }}">View Inventory</a>
-        </nav>
-    </header>
+    <div class="app-layout">
 
-    <main>
-        <h1>Inventory Dashboard</h1>
-        <p>Manage and track your warehouse stock easily.</p>
+        <!-- SHARED SIDEBAR -->
+        {% include 'sidebar.html' %}
 
-        <div class="cards">
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
 
-            <div class="card">
-                <h3>Total Products</h3>
-                <h2>{{ total_products }}</h2>
+            <!-- TOP BAR -->
+            <div class="topbar">
+
+                <div class="page-heading">
+                    <h1>Dashboard</h1>
+                    <p>Overview of your inventory</p>
+                </div>
+
+                <div class="topbar-right">
+
+                    <a href="{{ url_for('low_stock_page') }}" class="notification" title="View Low Stock Alerts">
+
+                        <i class="fa-regular fa-bell"></i>
+
+                        {% if low_stock > 0 %}
+                        <span class="notification-count">
+                            {{ low_stock }}
+                        </span>
+                        {% endif %}
+
+                    </a>
+
+                    <div class="profile">
+                        <span class="avatar">A</span>
+                        <span>Admin</span>
+                        <i class="fa-solid fa-chevron-down"></i>
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="card">
-                <h3>Total Stock</h3>
-                <h2>{{ total_stock }}</h2>
-            </div>
 
-            <div class="card warning">
-                <h3>Low Stock Items</h3>
-                <h2>{{ low_stock }}</h2>
-            </div>
+            <!-- SUMMARY CARDS -->
+            <section class="stats-grid">
 
-        </div>
+                <!-- TOTAL ITEMS -->
+                <div class="stat-card stat-blue">
 
-        <section class="inventory-section">
-            <h2>Inventory Overview</h2>
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-cube"></i>
+                    </div>
 
-            <table>
-                <thead>
-                    <tr>
-                        <th>Product</th>
-                        <th>Aisle</th>
-                        <th>Bin</th>
-                        <th>Quantity</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
+                    <p>Total Items</p>
 
-                <tbody>
+                    <h2>{{ total_products }}</h2>
 
-                    {% for product in products %}
+                    <span class="stat-caption">
+                        Products registered
+                    </span>
 
-                    <tr>
-                        <td>{{ product.name }}</td>
-                        <td>{{ product.aisle }}</td>
-                        <td>{{ product.bin }}</td>
-                        <td>{{ product.quantity }}</td>
+                </div>
 
-                        <td>
-                            {% if product.quantity <= product.minimum %} <span class="status low-stock">
-                                Low Stock
-                                </span>
-                                {% else %}
-                                <span class="status in-stock">
-                                    In Stock
-                                </span>
-                                {% endif %}
-                        </td>
-                    </tr>
 
-                    {% else %}
+                <!-- TOTAL STOCK -->
+                <div class="stat-card stat-green">
 
-                    <tr>
-                        <td colspan="5" style="text-align: center;">
-                            No products available.
-                        </td>
-                    </tr>
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
 
-                    {% endfor %}
+                    <p>Total Stock</p>
 
-                </tbody>
-            </table>
+                    <h2>{{ "{:,}".format(total_stock) }}</h2>
 
-        </section>
+                    <span class="stat-caption">
+                        Units available
+                    </span>
 
-    </main>
+                </div>
+
+
+                <!-- LOW STOCK -->
+                <div class="stat-card stat-orange">
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                    </div>
+
+                    <p>Low Stock Items</p>
+
+                    <h2>{{ low_stock }}</h2>
+
+                    <span class="stat-caption">
+                        Need attention
+                    </span>
+
+                </div>
+
+
+                <!-- AISLES USED -->
+                <div class="stat-card stat-indigo">
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-warehouse"></i>
+                    </div>
+
+                    <p>Aisles Used</p>
+
+                    <h2>{{ aisles_used }}</h2>
+
+                    <span class="stat-caption">
+                        Active aisles
+                    </span>
+
+                </div>
+
+
+                <!-- BINS USED -->
+                <div class="stat-card stat-purple">
+
+                    <div class="stat-icon">
+                        <i class="fa-solid fa-border-all"></i>
+                    </div>
+
+                    <p>Bins Used</p>
+
+                    <h2>{{ bins_used }}</h2>
+
+                    <span class="stat-caption">
+                        Occupied bin locations
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- QUICK ACTIONS AND ALERTS -->
+            <section class="middle-grid">
+
+                <!-- QUICK ACTIONS -->
+                <div class="panel actions-panel">
+
+                    <div class="panel-heading">
+
+                        <div>
+                            <h3>
+                                <i class="fa-solid fa-bolt heading-bolt"></i>
+                                Quick Actions
+                            </h3>
+
+                            <p>Get Started</p>
+                        </div>
+
+                    </div>
+
+
+                    <div class="actions-grid">
+
+                        <!-- VIEW INVENTORY -->
+                        <a href="{{ url_for('inventory') }}" class="action-card action-blue">
+
+                            <i class="fa-regular fa-eye action-main-icon"></i>
+
+                            <strong>View Inventory</strong>
+
+                            <small>Check all items</small>
+
+                            <span class="action-arrow">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </span>
+
+                        </a>
+
+
+                        <!-- ADD ITEM -->
+                        <a href="{{ url_for('add_product') }}" class="action-card action-green">
+
+                            <i class="fa-solid fa-circle-plus action-main-icon"></i>
+
+                            <strong>Add Item</strong>
+
+                            <small>Add new item</small>
+
+                            <span class="action-arrow">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </span>
+
+                        </a>
+
+
+                        <!-- UPDATE STOCK -->
+                        <a href="{{ url_for('update_stock_page') }}" class="action-card action-orange">
+
+                            <i class="fa-solid fa-arrows-rotate action-main-icon"></i>
+
+                            <strong>Update Stock</strong>
+
+                            <small>Modify quantity</small>
+
+                            <span class="action-arrow">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </span>
+
+                        </a>
+
+
+                        <!-- SEARCH ITEM -->
+                        <a href="{{ url_for('inventory') }}" class="action-card action-purple">
+
+                            <i class="fa-solid fa-magnifying-glass action-main-icon"></i>
+
+                            <strong>Search Item</strong>
+
+                            <small>Find items</small>
+
+                            <span class="action-arrow">
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </span>
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOW STOCK ALERTS -->
+                <div class="panel alerts-panel" id="low-stock">
+
+                    <div class="panel-heading alerts-heading">
+
+                        <h3>
+                            <i class="fa-solid fa-triangle-exclamation alert-heading-icon"></i>
+                            Low Stock Alerts
+                        </h3>
+
+                        <a href="{{ url_for('low_stock_page') }}">
+                            View All
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+
+                    </div>
+
+
+                    <div class="alert-list">
+
+                        {% for product in low_stock_products[:4] %}
+
+                        <div class="alert-item">
+
+                            <div class="alert-product-icon">
+                                <i class="fa-solid fa-box"></i>
+                            </div>
+
+                            <div class="alert-details">
+
+                                <strong>{{ product.name }}</strong>
+
+                                <small>
+                                    Aisle {{ product.aisle }},
+                                    Bin {{ product.bin }}
+                                </small>
+
+                            </div>
+
+                            <span class="quantity-badge">
+                                {{ product.quantity }} units
+                            </span>
+
+                        </div>
+
+                        {% else %}
+
+                        <div class="empty-alert">
+
+                            <i class="fa-solid fa-circle-check"></i>
+
+                            All products have sufficient stock.
+
+                        </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- RECENT INVENTORY -->
+            <section class="panel recent-panel">
+
+                <div class="panel-heading recent-heading">
+
+                    <div>
+
+                        <h3>
+                            <i class="fa-solid fa-clock-rotate-left recent-icon"></i>
+                            Recent Inventory
+                        </h3>
+
+                        <p>Current items in your inventory</p>
+
+                    </div>
+
+                    <a href="{{ url_for('inventory') }}" class="view-all-btn">
+
+                        View All Inventory
+
+                        <i class="fa-solid fa-arrow-right"></i>
+
+                    </a>
+
+                </div>
+
+
+                <!-- INVENTORY TABLE -->
+                <div class="table-wrapper">
+
+                    <table class="inventory-table">
+
+                        <thead>
+
+                            <tr>
+                                <th>ITEM NAME</th>
+                                <th>CATEGORY</th>
+                                <th>AISLE</th>
+                                <th>BIN</th>
+                                <th>QUANTITY</th>
+                                <th>STATUS</th>
+                                <th>PRODUCT ID</th>
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            {% for product in recent_products %}
+
+                            <tr>
+
+                                <td class="item-name">
+
+                                    <i class="fa-solid fa-box"></i>
+
+                                    {{ product.name }}
+
+                                </td>
+
+                                <td>General</td>
+
+                                <td>{{ product.aisle }}</td>
+
+                                <td>{{ product.bin }}</td>
+
+                                <td>{{ product.quantity }}</td>
+
+                                <td>
+
+                                    {% if product.quantity <= product.minimum %} <span class="status-pill status-low">
+                                        Low Stock
+                                        </span>
+
+                                        {% else %}
+
+                                        <span class="status-pill status-good">
+                                            In Stock
+                                        </span>
+
+                                        {% endif %}
+
+                                </td>
+
+                                <td>#{{ product.id }}</td>
+
+                            </tr>
+
+                            {% else %}
+
+                            <tr>
+
+                                <td colspan="7" class="empty-table">
+
+                                    No products available.
+                                    Add your first item.
+
+                                </td>
+
+                            </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        </main>
+
+    </div>
 
 </body>
 

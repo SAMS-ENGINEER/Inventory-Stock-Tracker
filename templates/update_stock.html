@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Stock | Inventory Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+    <div class="app-layout">
+        {% include 'sidebar.html' %}
+
+        <main class="main-content">
+            <div class="page-heading">
+                <h1>Update Stock</h1>
+                <p>Increase or decrease product quantities</p>
+            </div>
+
+            <section class="panel recent-panel page-panel">
+                <div class="table-wrapper">
+                    <table class="inventory-table">
+                        <thead>
+                            <tr>
+                                <th>ITEM NAME</th>
+                                <th>AISLE</th>
+                                <th>BIN</th>
+                                <th>CURRENT STOCK</th>
+                                <th>CHANGE QUANTITY</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for product in products %}
+                            <tr>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.aisle }}</td>
+                                <td>{{ product.bin }}</td>
+                                <td>{{ product.quantity }}</td>
+                                <td>
+                                    <form method="POST" action="{{ url_for('update_stock', product_id=product.id) }}"
+                                        class="stock-update-form">
+                                        <input type="number" name="change" placeholder="+5 or -2" required>
+                                        <button type="submit">
+                                            Update
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td colspan="5" class="empty-table">
+                                    No products available.
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+</body>
+
+</html>
