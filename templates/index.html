@@ -45,10 +45,16 @@
                     </a>
 
                     <div class="profile">
-                        <span class="avatar">A</span>
-                        <span>Admin</span>
-                        <i class="fa-solid fa-chevron-down"></i>
-                    </div>
+                     <span class="avatar">
+                     {{ session.get('admin_username', 'Admin')[0]|upper }}
+                      </span>
+
+         <span>
+        {{ session.get('admin_username', 'Admin') }}
+    </span>
+
+    <i class="fa-solid fa-chevron-down"></i>
+</div>
 
                 </div>
 

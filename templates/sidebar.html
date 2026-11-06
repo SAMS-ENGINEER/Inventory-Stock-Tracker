@@ -35,6 +35,16 @@
         </a>
     </nav>
 
+    <!-- Logout Button -->
+    <div class="sidebar-logout">
+        <form action="{{ url_for('logout') }}" method="POST">
+            <button type="submit" class="logout-btn">
+                <i class="fa-solid fa-right-from-bracket"></i>
+                <span>Logout</span>
+            </button>
+        </form>
+    </div>
+
     <div class="sidebar-bottom">
         <div class="warehouse-icon">
             <i class="fa-solid fa-warehouse"></i>
